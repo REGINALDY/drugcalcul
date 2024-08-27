@@ -14,11 +14,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         .main-container {
             text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            width: 100%;
         }
 
         h1 {
@@ -30,10 +34,11 @@
 
         .container {
             background: rgba(255, 255, 255, 0.1);
-            padding: 20px 40px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            width: 500px;
+            width: 100%;
+            max-width: 500px;
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap; /* Allows wrapping on mobile */
@@ -104,9 +109,14 @@
 
         /* Responsive design */
         @media (max-width: 767px) {
+            h1 {
+                font-size: 2em;
+            }
+
             .container {
                 flex-direction: column; /* Stack sections vertically on mobile */
                 align-items: center;
+                padding: 15px;
             }
 
             .section {
