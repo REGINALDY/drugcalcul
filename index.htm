@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dose Calculator Aid</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffcc70 0%, #ff6347 100%);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .main-container {
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2.5em;
+            color: #ffe600;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 500px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .section {
+            width: 45%;
+            text-align: left;
+        }
+
+        h2 {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #ffe600;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #fff;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        input[type="text"]::placeholder, input[type="number"]::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        p {
+            font-size: 1em;
+            margin: 10px 0;
+        }
+
+        #result1, #result2 {
+            color: #00BFFF; /* A shade of blue with good contrast */
+            font-weight: bold;
+        }
+
+        #reset-button {
+            background-color: #ff6347;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #reset-button:hover {
+            background-color: #ff4500;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>Dose Calculator Aid</h1>
+        <div class="container">
+            <div class="section">
+                <h2>mg/mL Calculation</h2>
+                <div class="input-group">
+                    <label for="mgml">Enter mg/mL (e.g., 250/5):</label>
+                    <input type="text" id="mgml" oninput="calculateMgMl()">
+                </div>
+                <div id="dose-fields">
+                    <div class="input-group">
+                        <label for="mg">Enter mg dose:</label>
+                        <input type="number" id="mg" oninput="calculateMl()">
+                    </div>
+                    <p>OR</p>
+                    <div class="input-group">
+                        <label for="ml">Enter mL dose:</label>
+                        <input type="number" id="ml" oninput="calculateMg()">
+                    </div>
+                </div>
+                <p id="result1"></p>
+            </div>
+
+            <div class="section">
+                <h2>mg/kg Calculation</h2>
+                <div class="input-group">
+                    <label for="mgkg">Enter mg/kg (e.g., 10/2):</label>
+                    <input type="text" id="mgkg" oninput="calculateMgKg()">
+                </div>
+                <div id="weight-fields">
+                    <div class="input-group">
+                        <label for="mg2">Enter mg:</label>
+                        <input type="number" id="mg2" oninput="calculateKg()">
+                    </div>
+                    <p>OR</p>
+                    <div class="input-group">
+                        <label for="kg">Enter kg:</label>
+                        <input type="number" id="kg" oninput="calculateMg2()">
+                    </div>
+                </div>
+                <p id="result2"></p>
+            </div>
+        </div>
+        <button id="reset-button" onclick="resetCalculator()">Reset Calculator</button>
+    </div>
+
+    <script>
+        function parseFraction(input) {
+            let parts = input.split('/');
+            if (parts.length === 2) {
+                return parseFloat(parts[0]) / parseFloat(parts[1]);
+            }
+            return parseFloat(input);
+        }
+
+        function calculateMgMl() {
+            let mgmlInput = document.getElementById('mgml').value;
+            let mgml = parseFraction(mgmlInput);
+            if (!isNaN(mgml) && mgml > 0) {
+                document.getElementById('dose-fields').style.display = 'block';
+            } else {
+                document.getElementById('dose-fields').style.display = 'none';
+                document.getElementById('result1').innerText = '';
+            }
+        }
+
+        function calculateMl() {
+            let mgmlInput = document.getElementById('mgml').value;
+            let mgml = parseFraction(mgmlInput);
+            let mg = parseFloat(document.getElementById('mg').value);
+            if (!isNaN(mgml) && !isNaN(mg) && mgml > 0 && mg > 0) {
+                let ml = mg / mgml;
+                document.getElementById('result1').innerText = `Equivalent mL dose: ${ml % 1 === 0 ? ml : ml.toFixed(2)} mL`;
+            } else {
+                document.getElementById('result1').innerText = '';
+            }
+        }
+
+        function calculateMg() {
+            let mgmlInput = document.getElementById('mgml').value;
+            let mgml = parseFraction(mgmlInput);
+            let ml = parseFloat(document.getElementById('ml').value);
+            if (!isNaN(mgml) && !isNaN(ml) && mgml > 0 && ml > 0) {
+                let mg = mgml * ml;
+                document.getElementById('result1').innerText = `Equivalent mg dose: ${mg % 1 === 0 ? mg : mg.toFixed(2)} mg`;
+            } else {
+                document.getElementById('result1').innerText = '';
+            }
+        }
+
+        function calculateMgKg() {
+            let mgkgInput = document.getElementById('mgkg').value;
+            let mgkg = parseFraction(mgkgInput);
+            if (!isNaN(mgkg) && mgkg > 0) {
+                document.getElementById('weight-fields').style.display = 'block';
+            } else {
+                document.getElementById('weight-fields').style.display = 'none';
+                document.getElementById('result2').innerText = '';
+            }
+        }
+
+        function calculateKg() {
+            let mgkgInput = document.getElementById('mgkg').value;
+            let mgkg = parseFraction(mgkgInput);
+            let mg = parseFloat(document.getElementById('mg2').value);
+            if (!isNaN(mgkg) && !isNaN(mg) && mgkg > 0 && mg > 0) {
+                let kg = mg / mgkg;
+                document.getElementById('result2').innerText = `Calculated weight: ${kg % 1 === 0 ? kg : kg.toFixed(2)} kg`;
+            } else {
+                document.getElementById('result2').innerText = '';
+            }
+        }
+
+        function calculateMg2() {
+            let mgkgInput = document.getElementById('mgkg').value;
+            let mgkg = parseFraction(mgkgInput);
+            let kg = parseFloat(document.getElementById('kg').value);
+            if (!isNaN(mgkg) && !isNaN(kg) && mgkg > 0 && kg > 0) {
+                let mg = mgkg * kg;
+                document.getElementById('result2').innerText = `Calculated mg: ${mg % 1 === 0 ? mg : mg.toFixed(2)} mg`;
+            } else {
+                document.getElementById('result2').innerText = '';
+            }
+        }
+
+        function resetCalculator() {
+            document.getElementById('mgml').value = '';
+            document.getElementById('mg').value = '';
+            document.getElementById('ml').value = '';
+            document.getElementById('mgkg').value = '';
+            document.getElementById('mg2').value = '';
+            document.getElementById('kg').value = '';
+            document.getElementById('result1').innerText = '';
+            document.getElementById('result2').innerText = '';
+            document.getElementById('dose-fields').style.display = 'none';
+            document.getElementById('weight-fields').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
