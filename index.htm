@@ -36,6 +36,7 @@
             width: 500px;
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap; /* Allows wrapping on mobile */
         }
 
         .section {
@@ -99,6 +100,23 @@
 
         #reset-button:hover {
             background-color: #ff4500;
+        }
+
+        /* Responsive design */
+        @media (max-width: 767px) {
+            .container {
+                flex-direction: column; /* Stack sections vertically on mobile */
+                align-items: center;
+            }
+
+            .section {
+                width: 100%; /* Make each section take full width on mobile */
+                margin-bottom: 20px; /* Add spacing between sections */
+            }
+
+            .section:last-child {
+                margin-bottom: 0; /* Remove bottom margin from the last section */
+            }
         }
     </style>
 </head>
